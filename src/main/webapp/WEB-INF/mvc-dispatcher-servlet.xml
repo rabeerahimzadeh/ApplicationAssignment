@@ -1,0 +1,123 @@
+<beans xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/mvc
+http://www.springframework.org/schema/mvc/spring-mvc.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <context:component-scan base-package="com.application.assignment.controller"/>
+    <context:component-scan base-package="com.application.assignment.service"/>
+    <context:component-scan base-package="com.application.assignment.dao"/>
+    <context:component-scan base-package="com.application.assignment.model"/>
+
+    <context:annotation-config/>
+    <context:property-placeholder location="classpath:persistence.properties"/>
+    <mvc:annotation-driven/>
+    <mvc:resources mapping="/lib/**" location="/lib/"/>
+    <mvc:resources mapping="/css/**" location="/css/"/>
+    <mvc:resources mapping="/controllers/**" location="/controllers/"/>
+    <mvc:resources mapping="/services/**" location="/services/"/>
+    <bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/view"/>
+        <property name="suffix" value=".html"/>
+    </bean>
+
+    <mvc:resources mapping="/**" location="/"/>
+
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" id="viewResolver">
+        <property name="prefix" value="/"/>
+        <property name="suffix" value=".html"/>
+    </bean>
+
+    <mvc:annotation-driven>
+        <!-- register custom converter that returns UTF-8 encoded response-body by defualt -->
+        <mvc:message-converters register-defaults="true">
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg index="0" name="defaultCharset" value="UTF-8"/>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                    <property name="supportedMediaTypes">
+                        <list>
+                            <value>text/plain;charset=UTF-8</value>
+                        </list>
+                    </property>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+
+    <bean
+            class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping"/>
+
+    <bean id="dataSource"
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.user}"/>
+        <property name="password" value="${jdbc.pass}"/>
+    </bean>
+
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="annotatedClasses">
+            <list>
+                <value>com.application.assignment.model.Company</value>
+                <value>com.application.assignment.model.Employee</value>
+                <value>com.application.assignment.model.Owner</value>
+                <value>com.application.assignment.model.CompanyEmployee</value>
+                <value>com.application.assignment.model.CompanyOwner</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+                <prop key="hibernate.connection.CharSet">utf-8</prop>
+                <prop key="hibernate.connection.characterEncoding">utf-8</prop>
+                <prop key="hibernate.connection.useUnicode">true</prop>
+                <prop key="hibernate.current_session_context_class">
+                    thread
+                </prop>
+                <prop key="org.hibernate.envers.store_data_at_delete">true</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="txManager"
+          class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="persistenceExceptionTranslationPostProcessor"
+          class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+
+    <bean id="companyDAOImpl" class="com.application.assignment.dao.CompanyDAOImpl"/>
+    <bean id="companyServiceImpl" class="com.application.assignment.service.CompanyServiceImpl"/>
+
+    <bean id="employeeDAOImpl" class="com.application.assignment.dao.EmployeeDAOImpl"/>
+    <bean id="employeeServiceImpl" class="com.application.assignment.service.EmployeeServiceImpl"/>
+
+    <bean id="ownerDAOImpl" class="com.application.assignment.dao.OwnerDAOImpl"/>
+    <bean id="ownerServiceImpl" class="com.application.assignment.service.OwnerServiceImpl"/>
+
+    <bean id="employeeCompanyDAOImpl" class="com.application.assignment.dao.EmployeeCompanyDAOImpl"/>
+    <bean id="employeeCompanyServiceImpl" class="com.application.assignment.service.EmployeeCompanyServiceImpl"/>
+
+    <bean id="ownerCompanyDAOImpl" class="com.application.assignment.dao.OwnerCompanyDAOImpl"/>
+    <bean id="ownerCompanyServiceImpl" class="com.application.assignment.service.OwnerCompanyServiceImpl"/>
+
+</beans>
