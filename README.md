@@ -475,7 +475,7 @@ The first suggestion is maintaining service redundancy using **_Heroku Dynos_**.
 In addition, the service providers can take advantages of queue-based messaging. In this architecture, there are different replica servers (I call it as a server pool). A load balancer receives an incoming request from queue and then deliver it to a replica server which has higher available resource. The queue is used as a buffer between client and servers. Client sends request to a queue instead of directly sending to server.  Server sends reply to a queue instead of directly sending to client. Depending on the project requirements, this method is useful because client can send request even if server is down, busy or disconnected. Server also can send reply even if client is down. Also in this solution, workload balancing across many servers is fully dynamic.  
 
 # Live Demo URL
-Heroku: https://company-assignment.herokuapp.com/#/company
+Heroku: https://company-assignment.herokuapp.com/#/company  
 Amazon EC2 Server: http://54.149.53.172:8080/applicationAssignment/#/company
 
 
