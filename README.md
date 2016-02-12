@@ -41,9 +41,12 @@ The database is MYSQL DB and it consists of the following tables:
  6. Run initial table script from this path : src\main\resources\sql\initial-data.sql  
  7. Run the web application with application server like Apache tomcat.  
 
-# API Reference
+# Live Demo  
+Heroku: https://company-assignment.herokuapp.com/#/company  
+Amazon EC2 Server: http://54.149.53.172:8080/applicationAssignment/#/company  
 
----
+ 
+# API Reference
 
 ### _List of Companies_
 
@@ -473,10 +476,6 @@ I suggest the following method/architecture for service redundancy.
 The first suggestion is maintaining service redundancy using **_Heroku Dynos_**. A _Dyno_ in _Heroku_ is a lightweight, virtualized Linux container in which _Heroku_ executes applications. So, it is possible to run multiple _Dynos_ which results in fault tolerance and redundancy mechanism. In this environment,   if one or more _Dynos_ fail, the job can continue its processing as well. It is recommended to run _Dynos_ in different physical infrastructure for higher redundancy.  
 
 In addition, the service providers can take advantages of queue-based messaging. In this architecture, there are different replica servers (I call it as a server pool). A load balancer receives an incoming request from queue and then deliver it to a replica server which has higher available resource. The queue is used as a buffer between client and servers. Client sends request to a queue instead of directly sending to server.  Server sends reply to a queue instead of directly sending to client. Depending on the project requirements, this method is useful because client can send request even if server is down, busy or disconnected. Server also can send reply even if client is down. Also in this solution, workload balancing across many servers is fully dynamic.  
-
-# Live Demo URL
-Heroku: https://company-assignment.herokuapp.com/#/company  
-Amazon EC2 Server: http://54.149.53.172:8080/applicationAssignment/#/company
 
 
 
